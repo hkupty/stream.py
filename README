@@ -19,3 +19,6 @@ To install system-wide:
 or if you just need it in a project:
 
     $ cp ./stream.py ~/your/project
+
+### Reference
+http://toolz.readthedocs.org/en/latest/api.html
