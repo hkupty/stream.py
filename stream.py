@@ -130,25 +130,25 @@ class Stream(Iterable):
     """A stream is both a lazy list and an iterator-processing function.
 
     The lazy list is represented by the attribute 'iterator'.
-    
+
     The iterator-processing function is represented by the method
     __call__(iterator), which should return a new iterator
     representing the output of the Stream.
-    
+
     By default, __call__(iterator) chains iterator with self.iterator,
     appending itself to the input stream in effect.
-    
+
     __pipe__(inpipe) defines the connection mechanism between Stream objects.
     By default, it replaces self.iterator with the iterator returned by
     __call__(iter(inpipe)).
-    
+
     A Stream subclass will usually implement __call__, unless it is an
     accumulator and will not return a Stream, in which case it will need to
     implement __pipe__.
-    
+
     The `>>` operator works as follow: the expression `a >> b` means
     `b.__pipe__(a) if hasattr(b, '__pipe__') else b(a)`.
-    
+
     >>> [1, 2, 3] >> Stream([4, 5, 6]) >> list
     [1, 2, 3, 4, 5, 6]
     """
@@ -221,7 +221,7 @@ class take(Stream):
         return 'Stream(%s)' % repr(self.items)
 
 
-negative = lambda x: x and x < 0    ### since None < 0 == True
+negative = lambda x: x and x < 0    # since None < 0 == True
 
 
 class itemtaker(Stream):
@@ -740,15 +740,15 @@ class ForkedFeeder(Iterable):
 
 class ThreadPool(Stream):
     """Work on the input stream asynchronously using a pool of threads.
-    
+
     >>> range(10) >> ThreadPool(map(lambda x: x*x)) >> sum
     285
-    
+
     The pool object is an iterable over the output values.  If an
     input value causes an Exception to be raised, the tuple (value,
     exception) is put into the pool's `failqueue`.  The attribute
     `failure` is a thead-safe iterator over the `failqueue`.
-    
+
     See also: Executor
     """
     def __init__(self, function, poolsize=_nCPU, args=[], kwargs={}):
@@ -789,7 +789,7 @@ class ThreadPool(Stream):
         self.cleaner_thread = threading.Thread(target=cleanup)
         self.cleaner_thread.start()
         self.iterator = _iterqueue(self.outqueue)
-    
+
     def __call__(self, inpipe):
         if self.closed:
             raise BrokenPipe('All workers are dead, refusing to summit jobs. '
@@ -801,10 +801,10 @@ class ThreadPool(Stream):
         self.feeder_thread = threading.Thread(target=feed)
         self.feeder_thread.start()
         return self.iterator
-    
+
     def join(self):
         self.cleaner_thread.join()
-    
+
     def __repr__(self):
         return '<ThreadPool(poolsize=%s) at %s>' % (self.poolsize, hex(id(self)))
 
@@ -1243,8 +1243,8 @@ def chaincall(func, initval):
 def maximum(key):
     """
     Curried version of the built-in max.
-    
-    >>> Stream([3, 5, 28, 42, 7]) >> maximum(lambda x: x%28) 
+
+    >>> Stream([3, 5, 28, 42, 7]) >> maximum(lambda x: x%28)
     42
     """
     return lambda s: max(s, key=key)
