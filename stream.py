@@ -1263,13 +1263,16 @@ def minimum(key):
 def reduce(function, initval=None):
     """
     Curried version of the built-in reduce.
-    
+
     >>> reduce(lambda x,y: x+y)( [1, 2, 3, 4, 5] )
     15
+    >>> reduce(lambda x,y: x+y, initval=10)( [1, 2, 3, 4, 5] )
+    25
     """
     if initval is None:
-        return lambda s: __builtin__.reduce(function, s)
+        return cytoolz.curry(__builtin__.reduce)(function)
     else:
+        # TODO: Port to cytoolz
         return lambda s: __builtin__.reduce(function, s, initval)
 
 
